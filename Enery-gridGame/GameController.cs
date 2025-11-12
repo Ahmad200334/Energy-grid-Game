@@ -1,4 +1,6 @@
-﻿public class GameController
+﻿ 
+
+public class GameController
 {
     private readonly GameLogic game;
 
@@ -109,3 +111,7 @@
 
      
 }
+
+ 
+
+

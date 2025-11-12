@@ -44,6 +44,15 @@ public class state
         newPlayer.col = newCol;
         newPlayer.TotalCost += nextCell.CellCost;
 
+        if (newGrid.cells[newRow, newCol].typeCell == enTypeCell.EmptyCell)
+            newGrid.cells[newRow, newCol].typeCell = enTypeCell.Visited;
+
+        // ✅ أيضاً نغير الخلية القديمة إن كانت Start أو Empty
+        if (newGrid.cells[Player.row, Player.col].typeCell == enTypeCell.EmptyCell ||
+            newGrid.cells[Player.row, Player.col].typeCell == enTypeCell.StartCell)
+            newGrid.cells[Player.row, Player.col].typeCell = enTypeCell.Visited;
+
+
         // إرجاع حالة جديدة
         return new state(newGrid, newPlayer);
     }
