@@ -2,7 +2,7 @@
 
 public class GameController
 {
-    private readonly GameLogic game;
+    public   GameLogic game;
 
     public GameController(GameLogic game)
     {
@@ -18,6 +18,9 @@ public class GameController
             Console.WriteLine("Use arrows  to move:");
             var key = Console.ReadKey(true).Key;
 
+
+            
+
             bool moved = key switch
             {
                 ConsoleKey.UpArrow => game.TryMove(-1, 0),
@@ -29,14 +32,14 @@ public class GameController
 
             if (!moved)
             {
-                Console.WriteLine("🚫 Invalid move!");
+                Console.WriteLine("Invalid move   !");
                 continue;
             }
 
             if (game.IsGameFinished())
             {
                 PrintGrid();
-                Console.WriteLine("🎯 Goal reached! Total Cost: " + game.CurrentState.Player.TotalCost);
+                Console.WriteLine("Goal reached! Total Cost: " + game.CurrentState.Player.TotalCost);
                 break;
             }
         }
@@ -44,34 +47,35 @@ public class GameController
 
 
 
-    private void PrintGrid()
+    public void PrintGrid()
     {
         Console.Clear();
-        Console.OutputEncoding = System.Text.Encoding.UTF8; // ضروري لعرض الرموز بشكل صحيح
+         
 
         var grid = game.CurrentState.Grid;
         var player = game.CurrentState.Player;
 
-        for (int r = 0; r < grid.rows; r++)
+        for (int i = 0; i < grid.rows; i++)
         {
-            for (int c = 0; c < grid.columns; c++)
+            for (int j = 0; j < grid.columns; j++)
             {
-                // موقع الروبوت
-                if (r == player.row && c == player.col)
+                
+                if (i == player.row && j == player.col)
                 {
                     Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.Write("🤖     "); // مسافات أكثر (5) للمحاذاة
+                    Console.Write("??     "); 
                     Console.ResetColor();
                     continue;
                 }
 
-                var cellType = grid.cells[r, c].typeCell;
+                var cellType = grid.cells[i, j].typeCell;
+
                 switch (cellType)
                 {
-                    case enTypeCell.StartCell:
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write("S     "); // مسافات إضافية
-                        break;
+                    //case enTypeCell.StartCell:
+                    //    Console.ForegroundColor = ConsoleColor.Green;
+                    //    Console.Write("S     ");  
+                    //    break;
 
                     case enTypeCell.GoalCell:
                         Console.ForegroundColor = ConsoleColor.Yellow;
@@ -80,14 +84,14 @@ public class GameController
 
                     case enTypeCell.WallCell:
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("███   "); // شكل مربع أعرض للفصل البصري
+                        Console.Write("WW   ");
                         break;
 
                     case enTypeCell.Visited:
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write("V     "); // رمز الزيارة
+                        Console.Write("V     ");  
                         break;
-
+                        
                     case enTypeCell.EnergyCell:
                         Console.ForegroundColor = ConsoleColor.Magenta;
                         Console.Write("E     ");
@@ -95,23 +99,21 @@ public class GameController
 
                     default:
                         Console.ResetColor();
-                        Console.Write("░     "); // استبدال النقطة برمز فراغ جميل
+                        Console.Write("░     ");  
                         break;
                 }
 
                 Console.ResetColor();
             }
-            Console.WriteLine("\n"); // سطر فارغ بين الصفوف لمظهر شبكي أجمل
+            Console.WriteLine("\n");  
         }
 
         Console.ResetColor();
-        Console.WriteLine($"\n🔋 Total Cost: {player.TotalCost}");
+        Console.WriteLine();
+        Console.WriteLine($" Total Cost: {player.TotalCost}");
     }
 
-
-     
 }
 
+
  
-
-

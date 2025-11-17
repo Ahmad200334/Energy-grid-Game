@@ -14,7 +14,7 @@
         if (nextState == null)
             return false;
 
-        CurrentState = nextState; // الانتقال إلى الحالة الجديدة
+        CurrentState = nextState;  
         return true;
     }
 

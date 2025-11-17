@@ -39,6 +39,9 @@
 
 
     }
+
+
+
     public Cells Clone()
     {
         return new Cells(this.typeCell, this.row, this.col)
