@@ -35,8 +35,6 @@ namespace Enery_gridGame
             {
                 state state = Queue.Dequeue();
 
-                PrintGridStep(state.Player.TotalCost);
-                Thread.Sleep(500);
 
                 if (state.IsItGoal())
                 {
@@ -52,21 +50,16 @@ namespace Enery_gridGame
                     if (visited[Rowschild, Colschild])
                     {
                         continue;
-                    }
 
-                    var nextState = state.CreateNextState(Rowschild - state.Player.row, Colschild - state.Player.col);
 
                     if (nextState == null)
                     {
                         continue;
-                    }
 
-                    visited[Rowschild, Colschild] = true;
                      
                     Queue.Enqueue(nextState);
                 }
             }
-        }
 
 
 

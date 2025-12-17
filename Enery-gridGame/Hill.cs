@@ -9,7 +9,6 @@ namespace Enery_gridGame
     class Hill
     {
         public GameLogic logic { get; set; }
-
         public (int, int) Goal;
         
         public Hill(GameLogic game)
@@ -18,8 +17,6 @@ namespace Enery_gridGame
             Goal = GetGoal();
         }
 
-        public int Dimension(state state)
-        {
     
             return Math.Abs (state.Player.row - Goal.Item1  ) +  Math.Abs(state.Player.col -Goal.Item2);   
         }
@@ -56,15 +53,11 @@ namespace Enery_gridGame
                         continue;
 
 
-                    int value = Dimension(next);
-
-
                     if (value < bestValue)
                     {
                         bestValue = value;
                         bestNeighbor = next;
                     }
-
                 }
 
                 if (bestNeighbor == null)
@@ -210,5 +203,4 @@ namespace Enery_gridGame
             }
         }
     }
-
 }

@@ -1,7 +1,6 @@
 ﻿class Disjstra
 {
     public PriorityQueue<state, int> pq;
-
     public Dictionary<string, int> costs;
     public GameLogic Game { get; }
 
