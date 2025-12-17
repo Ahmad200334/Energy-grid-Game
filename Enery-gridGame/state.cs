@@ -5,29 +5,55 @@ public class state
     public Grid Grid;
 
     public Player Player;
-
-    public int[,] CanMoveIt;
-
+     
+    public List<Cells> neighborCells;
+     
+    public state Parent { set; get; }
+    public int cost { set; get; }
 
     public state(Grid grid, Player player)
     {
         Grid = grid;
         Player = player;
-        CanMoveIt = new int[4, 4];
+        neighborCells = new List<Cells>();
+        Accessible();
+         
     }
 
-    public bool isAccesss(int row,int col)
+    private bool IsAccessible(int row, int col)
     {
-      return  Grid.cells[row, col].typeCell != enTypeCell.WallCell;
+        if (row < 0 || col < 0 || row >= Grid.rows || col >= Grid.columns)
+            return false;
+
+        return Grid.cells[row, col].typeCell != enTypeCell.WallCell;
     }
+
 
     public void Accessible()
     {
-        //if(isAccesss())
+        neighborCells.Clear();
+
+        if (IsAccessible(Player.row, Player.col - 1))
+            neighborCells.Add(Grid.cells[Player.row, Player.col - 1]);
+
+        if (IsAccessible(Player.row, Player.col + 1))
+            neighborCells.Add(Grid.cells[Player.row, Player.col + 1]);
+
+        if (IsAccessible(Player.row - 1, Player.col))
+            neighborCells.Add(Grid.cells[Player.row - 1, Player.col]);
+
+        if (IsAccessible(Player.row + 1, Player.col))
+            neighborCells.Add(Grid.cells[Player.row + 1, Player.col]);
+
+         
     }
 
+    
+     
     public state CreateNextState(int dRow, int dCol)
     {
+
+         
         int newRow = Player.row + dRow;
         int newCol = Player.col + dCol;
 
@@ -58,9 +84,13 @@ public class state
             newGrid.cells[Player.row, Player.col].typeCell == enTypeCell.StartCell)
             newGrid.cells[Player.row, Player.col].typeCell = enTypeCell.Visited;
 
+        var newState = new state(newGrid, newPlayer);
 
+        newState.cost = this.cost + nextCell.CellCost;
          
-        return new state(newGrid, newPlayer);
+        newState.Parent = this;
+
+        return newState;
     }
 
     public bool IsItGoal()
@@ -84,5 +114,9 @@ public class state
         return Player.GetHashCode();
     }
 
+    public override string ToString()
+    {
+        return $"[" + this.Player.row + "," + this.Player.col + "]";
+    }
 
 }

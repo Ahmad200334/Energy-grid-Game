@@ -1,5 +1,6 @@
-﻿ 
+﻿ using Enery_gridGame;
 
+ 
 public class GameController
 {
     public   GameLogic game;
@@ -16,10 +17,47 @@ public class GameController
             PrintGrid();
 
             Console.WriteLine("Use arrows  to move:");
-            var key = Console.ReadKey(true).Key;
+            var key= Console.ReadKey().Key;
 
+            if (key == ConsoleKey.A)
+            {
 
+                Hill hill = new Hill(game);
+                hill.Search();
+                Console.WriteLine("\nfinished .");
+                Console.ReadKey();
+                continue;
+            }
+            if (key == ConsoleKey.B)
+            {
+                 
+                BFS bfs = new BFS(game);
+                bfs.Begin(); 
+                Console.WriteLine("\nfinished .");
+                Console.ReadKey();
+                continue;
+            }
             
+            if (key == ConsoleKey.D)
+            {
+                 
+                DFS dfs = new DFS(game);
+                dfs.begin(); 
+                Console.WriteLine("\nfinished .");
+                Console.ReadKey();
+                continue;
+            }
+            if (key == ConsoleKey.U)
+            {
+                 
+                var dij = new Disjstra(game);
+                dij.Search();
+                Console.WriteLine("\nfinished .");
+                Console.ReadKey();
+                continue;
+            }
+
+
 
             bool moved = key switch
             {
@@ -51,7 +89,6 @@ public class GameController
     {
         Console.Clear();
          
-
         var grid = game.CurrentState.Grid;
         var player = game.CurrentState.Player;
 
@@ -72,11 +109,7 @@ public class GameController
 
                 switch (cellType)
                 {
-                    //case enTypeCell.StartCell:
-                    //    Console.ForegroundColor = ConsoleColor.Green;
-                    //    Console.Write("S     ");  
-                    //    break;
-
+                     
                     case enTypeCell.GoalCell:
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("G     ");
@@ -114,6 +147,5 @@ public class GameController
     }
 
 }
-
 
  

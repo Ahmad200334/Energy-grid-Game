@@ -6,6 +6,7 @@
     public GameLogic(state initialstate)
     {
        CurrentState = initialstate;
+        
     }
 
     public bool TryMove(int dRow, int dCol)
@@ -17,6 +18,8 @@
         CurrentState = nextState;  
         return true;
     }
+    
+
 
 
     public bool IsGameFinished()
