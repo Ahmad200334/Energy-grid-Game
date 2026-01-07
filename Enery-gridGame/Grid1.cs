@@ -26,6 +26,8 @@
         }
     }
 
+
+
     public void SetCell (int row , int column ,enTypeCell typeCell)
     {
         cells[row,column]=new Cells(typeCell,row,column);
@@ -34,6 +36,7 @@
     public Grid Clone()
     {
         Grid newGrid = new Grid(rows, columns);
+
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < columns; j++)
@@ -43,4 +46,6 @@
         }
         return newGrid;
     }
+
+
 }

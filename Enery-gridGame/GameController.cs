@@ -1,6 +1,14 @@
-﻿public class GameController
+﻿ using Enery_gridGame;
+
+ 
+public class GameController
 {
-    private readonly GameLogic game;
+    public   GameLogic game;
+    public BFS BFS { set; get; }
+    public DFS DFS { set; get; }
+    public Disjstra UCS{ set; get; }
+    public Hill Hill { set; get; }
+    public AStar  AStar { set; get; }
 
     public GameController(GameLogic game)
     {
@@ -14,7 +22,67 @@
             PrintGrid();
 
             Console.WriteLine("Use arrows  to move:");
-            var key = Console.ReadKey(true).Key;
+            var key= Console.ReadKey().Key;
+
+            if (key == ConsoleKey.A)
+            {
+
+                AStar = new AStar(game);
+                AStar.start();
+                Console.WriteLine("\nfinished .");
+                Console.ReadKey();
+                continue;
+            }
+            if (key == ConsoleKey.H)
+            {
+
+                Hill  = new Hill(game);
+                Hill.start();
+                Console.WriteLine("\nfinished .");
+                Console.ReadKey();
+                continue;
+            }
+            if (key == ConsoleKey.B)
+            {
+                 
+                 BFS = new BFS(game);
+                BFS.start(); 
+                Console.WriteLine("\nfinished .");
+                Console.ReadKey();
+                continue;
+            }
+            if (key == ConsoleKey.R)
+            {
+                 
+                Report report = new Report(BFS,DFS,Hill,UCS,AStar,game);
+                report.Print(); 
+                Console.WriteLine("\nfinished .");
+                Console.ReadKey();
+                continue;
+            }
+            
+            if (key == ConsoleKey.D)
+            {
+                 
+                DFS = new DFS(game);
+                DFS.start(); 
+                Console.WriteLine("\nfinished .");
+                Console.ReadKey();
+                continue;
+            }
+            if (key == ConsoleKey.U)
+            {
+                 
+                UCS = new Disjstra(game);
+                UCS.start();
+                Console.WriteLine("\nfinished .");
+                Console.ReadKey();
+                continue;
+            }
+
+             
+
+
 
             bool moved = key switch
             {
@@ -27,14 +95,14 @@
 
             if (!moved)
             {
-                Console.WriteLine("🚫 Invalid move!");
+                Console.WriteLine("Invalid move   !");
                 continue;
             }
 
             if (game.IsGameFinished())
             {
                 PrintGrid();
-                Console.WriteLine("🎯 Goal reached! Total Cost: " + game.CurrentState.Player.TotalCost);
+                Console.WriteLine("Goal reached! Total Cost: " + game.CurrentState.Player.TotalCost);
                 break;
             }
         }
@@ -42,35 +110,31 @@
 
 
 
-    private void PrintGrid()
+    public void PrintGrid()
     {
         Console.Clear();
-        Console.OutputEncoding = System.Text.Encoding.UTF8; // ضروري لعرض الرموز بشكل صحيح
-
+         
         var grid = game.CurrentState.Grid;
         var player = game.CurrentState.Player;
 
-        for (int r = 0; r < grid.rows; r++)
+        for (int i = 0; i < grid.rows; i++)
         {
-            for (int c = 0; c < grid.columns; c++)
+            for (int j = 0; j < grid.columns; j++)
             {
-                // موقع الروبوت
-                if (r == player.row && c == player.col)
+                
+                if (i == player.row && j == player.col)
                 {
                     Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.Write("🤖     "); // مسافات أكثر (5) للمحاذاة
+                    Console.Write("??     "); 
                     Console.ResetColor();
                     continue;
                 }
 
-                var cellType = grid.cells[r, c].typeCell;
+                var cellType = grid.cells[i, j].typeCell;
+
                 switch (cellType)
                 {
-                    case enTypeCell.StartCell:
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write("S     "); // مسافات إضافية
-                        break;
-
+                     
                     case enTypeCell.GoalCell:
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("G     ");
@@ -78,14 +142,14 @@
 
                     case enTypeCell.WallCell:
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("███   "); // شكل مربع أعرض للفصل البصري
+                        Console.Write("WW   ");
                         break;
 
                     case enTypeCell.Visited:
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write("V     "); // رمز الزيارة
+                        Console.Write("V     ");  
                         break;
-
+                        
                     case enTypeCell.EnergyCell:
                         Console.ForegroundColor = ConsoleColor.Magenta;
                         Console.Write("E     ");
@@ -93,19 +157,20 @@
 
                     default:
                         Console.ResetColor();
-                        Console.Write("░     "); // استبدال النقطة برمز فراغ جميل
+                        Console.Write("░     ");  
                         break;
                 }
 
                 Console.ResetColor();
             }
-            Console.WriteLine("\n"); // سطر فارغ بين الصفوف لمظهر شبكي أجمل
+            Console.WriteLine("\n");  
         }
 
         Console.ResetColor();
-        Console.WriteLine($"\n🔋 Total Cost: {player.TotalCost}");
+        Console.WriteLine();
+        Console.WriteLine($" Total Cost: {player.TotalCost}");
     }
 
-
-     
 }
+
+ 
