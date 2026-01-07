@@ -4,6 +4,11 @@
 public class GameController
 {
     public   GameLogic game;
+    public BFS BFS { set; get; }
+    public DFS DFS { set; get; }
+    public Disjstra UCS{ set; get; }
+    public Hill Hill { set; get; }
+    public AStar  AStar { set; get; }
 
     public GameController(GameLogic game)
     {
@@ -22,8 +27,17 @@ public class GameController
             if (key == ConsoleKey.A)
             {
 
-                Hill hill = new Hill(game);
-                hill.Search();
+                AStar = new AStar(game);
+                AStar.start();
+                Console.WriteLine("\nfinished .");
+                Console.ReadKey();
+                continue;
+            }
+            if (key == ConsoleKey.H)
+            {
+
+                Hill  = new Hill(game);
+                Hill.start();
                 Console.WriteLine("\nfinished .");
                 Console.ReadKey();
                 continue;
@@ -31,8 +45,17 @@ public class GameController
             if (key == ConsoleKey.B)
             {
                  
-                BFS bfs = new BFS(game);
-                bfs.Begin(); 
+                 BFS = new BFS(game);
+                BFS.start(); 
+                Console.WriteLine("\nfinished .");
+                Console.ReadKey();
+                continue;
+            }
+            if (key == ConsoleKey.R)
+            {
+                 
+                Report report = new Report(BFS,DFS,Hill,UCS,AStar,game);
+                report.Print(); 
                 Console.WriteLine("\nfinished .");
                 Console.ReadKey();
                 continue;
@@ -41,8 +64,8 @@ public class GameController
             if (key == ConsoleKey.D)
             {
                  
-                DFS dfs = new DFS(game);
-                dfs.begin(); 
+                DFS = new DFS(game);
+                DFS.start(); 
                 Console.WriteLine("\nfinished .");
                 Console.ReadKey();
                 continue;
@@ -50,12 +73,14 @@ public class GameController
             if (key == ConsoleKey.U)
             {
                  
-                var dij = new Disjstra(game);
-                dij.Search();
+                UCS = new Disjstra(game);
+                UCS.start();
                 Console.WriteLine("\nfinished .");
                 Console.ReadKey();
                 continue;
             }
+
+             
 
 
 

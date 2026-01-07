@@ -1,37 +1,44 @@
-﻿public class DFS
+﻿using Enery_gridGame;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+
+public class DFS :BaseReport
 {
+    private GameLogic game;
+    private bool[,] visited;
 
     public Stack<state> stack;
-    public GameLogic Logic;
-    public bool[,] visited;
-    public state startState;
-    public state goalState;
+    public state Startstate;
+    public int counter { set; get; } = 0;
 
-    public DFS(GameLogic logic)
+    public DFS(GameLogic gameLogic)
     {
-        Logic = logic;
+        game = new GameLogic(gameLogic);
+
+        int rows = game.CurrentState.Grid.rows;
+        int cols = game.CurrentState.Grid.columns;
+
+        visited = new bool[rows, cols];
         stack = new Stack<state>();
-        visited = new bool[logic.CurrentState.Grid.rows, logic.CurrentState.Grid.columns];
-        startState = logic.CurrentState;
-
+        Startstate = game.CurrentState;
     }
-
-    public void begin()
+     
+         
+    public override void start()
     {
-
-
-
-        stack.Push(startState);
-        visited[startState.Player.row, startState.Player.col] = true;
+        stack.Push(Startstate);
+        visited[Startstate.Player.row, Startstate.Player.col] = true;
 
         state goalState = null;
 
         while (stack.Count > 0)
         {
             state current = stack.Pop();
-            PrintGridStep(current.Player.TotalCost);
-            Thread.Sleep(500);
 
+            game.CurrentState = current;
+            game.PrintGridStep(current.Player.TotalCost);
+            Thread.Sleep(200);
 
             if (current.IsItGoal())
             {
@@ -39,185 +46,41 @@
                 break;
             }
 
-
-            foreach (var child in current.neighborCells)
+            foreach (var nextCell in current.neighborCells)
             {
-                int rowsChild = child.row;
-                int ColChild = child.col;
+                int nr = nextCell.row;
+                int nc = nextCell.col;
 
-                if (visited[rowsChild, ColChild])
+                if (visited[nr, nc])
                     continue;
 
-                state nextState = current.CreateNextState(rowsChild - current.Player.row, ColChild - current.Player.col);
+                state nextState = current.CreateNextState(
+                    nr - current.Player.row,
+                    nc - current.Player.col
+                );
+
                 if (nextState == null)
                     continue;
+                allState++;
+                nextState.Parent = current;
 
+                visited[nr, nc] = true;
                 stack.Push(nextState);
-                visited[rowsChild, ColChild] = true;
-
-
             }
         }
 
-
-
-        stack.Push(startState);
-        visited[startState.Player.row, startState.Player.col] = true;
-
-
-        if (startState.IsItGoal())
+        if (goalState != null)
         {
-            return;
-        }
+            Count = game.CountSteps(goalState);
+            Cost = goalState.cost;
+            Console.WriteLine($"Steps = {Count}");
 
-        while (stack.Count > 0)
+            Path = game.PrintPath(goalState);
+            Console.WriteLine(Path);
+        }
+        else
         {
-            state state = stack.Peek();
-
-            foreach (var child in state.neighborCells)
-            {
-
-                int rowsChild = child.row;
-                int colsChild = child.col;
-
-                if (visited[rowsChild, colsChild])
-                {
-                    continue;
-                }
-
-                state nextState = state.CreateNextState(rowsChild - rowsChild, colsChild - colsChild);
-
-
-                if (nextState == null)
-                {
-                    continue;
-                }
-
-                stack.Push(state);
-                visited[rowsChild, colsChild] = true;
-
-                state = nextState;
-
-            }
-
+            Console.WriteLine("No path found!");
         }
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void PrintGridStep(int totalCost)
-    {
-        var grid = Logic.CurrentState.Grid;
-        var player = Logic.CurrentState.Player;
-
-        for (int i = 0; i < grid.rows; i++)
-        {
-            for (int j = 0; j < grid.columns; j++)
-            {
-                if (i == player.row && j == player.col)
-                {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.Write("??     ");
-                    Console.ResetColor();
-                    continue;
-                }
-
-                var cellType = grid.cells[i, j].typeCell;
-
-                switch (cellType)
-                {
-                    case enTypeCell.GoalCell:
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("G     ");
-                        break;
-                    case enTypeCell.WallCell:
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("WW   ");
-                        break;
-                    case enTypeCell.Visited:
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write("V     ");
-                        break;
-                    case enTypeCell.EnergyCell:
-                        Console.ForegroundColor = ConsoleColor.Magenta;
-                        Console.Write("E     ");
-                        break;
-                    default:
-                        Console.ResetColor();
-                        Console.Write("░     ");
-                        break;
-                }
-
-                Console.ResetColor();
-            }
-            Console.WriteLine("\n");
-        }
-
-        Console.WriteLine($"\nTotal Cost: {totalCost}");
-    }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
